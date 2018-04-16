@@ -1,0 +1,11 @@
+00000000 T _start
+00000000 T s_text
+0000000c T main
+00000044 t _GLOBAL__I_non_const_tab
+00000054 T e_text
+00000054 T s_rodata
+00000054 t _ZL3tab
+0000007c T e_rodata
+0000007c T s_data_lma
+20000000 D non_const_tab
+2000002c B t

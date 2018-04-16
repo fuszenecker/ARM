@@ -1,0 +1,37 @@
+CROSS		= arm-elf-
+CC			= $(CROSS)g++
+CXX			= $(CROSS)g++
+AS			= $(CC)
+OPT			= 1
+FWLIB		= drivers/stm32/src
+DRIVERS		= drivers/stm32
+CFLAGS		= -mthumb -mcpu=cortex-m3 -Wall -O$(OPT) -g -D__STM32__ -I$(FWLIB)/../inc -I. -Idrivers/stm32 -Ikernel -Iservers -Iapps
+CFLAGS		+= -D__CAN_LOOPBACK__
+CXXFLAGS	= $(CFLAGS)
+LD			= $(CROSS)ld
+LDFLAGS		= -T stm32.ld
+
+OBJDUMP		= $(CROSS)objdump
+ODFLAGS		= -h -j .vectors -j .text -j .data -j .bss -dS 
+OBJCOPY		= $(CROSS)objcopy
+OCFLAGS		= -O binary -j .vectors -j .text -j .data -j .bss
+NM			= $(CROSS)nm
+
+PROG		= rtos_stm32
+
+OBJS		= kernel/sysinit.o kernel/queue.o kernel/sched.o kernel/swcall.o kernel/irq.o servers/servers_init.o apps/apps_init.o
+OBJS		+= $(DRIVERS)/clock.o $(DRIVERS)/systick.o $(DRIVERS)/gpio.o
+OBJS		+= $(FWLIB)/stm32f10x_rcc.o $(FWLIB)/stm32f10x_flash.o $(FWLIB)/stm32f10x_systick.o # $(FWLIB)/stm32f10x_nvic.o $(FWLIB)/cortexm3_macro.o
+
+OBJS		+= $(DRIVERS)/can.o $(DRIVERS)/usart.o 
+OBJS		+= $(FWLIB)/stm32f10x_gpio.o  $(FWLIB)/stm32f10x_can.o $(FWLIB)/stm32f10x_usart.o
+
+all: clean $(OBJS)
+	$(LD) $(LDFLAGS) -o $(PROG) $(OBJS) $(EXT_LIBS)
+	$(OBJDUMP) $(ODFLAGS) $(PROG) > $(PROG).list 
+	$(OBJCOPY) $(OCFLAGS) $(PROG) $(PROG).bin
+	$(NM) $(PROG) | sort > $(PROG).nm
+
+clean:
+	rm -rf $(OBJS) $(PROG) $(PROG).list $(PROG).hex $(PROG).nm $(PROG).bin
+

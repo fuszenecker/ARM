@@ -1,0 +1,383 @@
+====8<================================================================================
+----------
+TODO list:
+----------
+
+* olimex-gccfd from CD1
+* CodeSourcery GCC installed in /opt
+* Linux environment (needed to compile the kernel and utilities)
+* Debian ARM CDs with base filesystem
+
++ boot process
+    * arm boot
+    * uboot
+    + linux kernel
+    + fs
++ setup eclipse (cross-compile)
+    + arm-gcc
+    + helloworld.c
++ openocd program image (boot blocks and filesystem)
++ recompile boot programs and kernel image
+    Kernel:
+        See section "Compiling a new kernel".
+    Install:
+        See section "Booting a new kernel".
+* debug boot programs 
++ and kernel (via kgdb or kdb (as servers) and gdb (as client))
+* debug user applications (with gdb installed on target)
+====8<================================================================================
+
+--------
+General:
+--------
+    
+    Under Windows:
+        * Install "Olimex-GCCFD-20081015.exe" from CD1.
+          This program installs the GNU toolchain and the Eclipse IDE, too.
+        * Install the driver of Olimex JTAG debugger from CD1.
+    Under Linux and Windows:
+        * On CD2 you can find the pre-compiled boot and root images needed to RESET
+          the original content of the FLASH chips.
+        * Download SAM-BA (SAM Boot Assistant) from Atmel website. You can also use
+          the binaries that have been already installed.
+    Under Linux:
+        * Download the GNU toolchain for ARM from 
+          http://www.codesourcery.com/sgpp/platforms.html
+          You need "ARM EABI" to compile the kernel, and "ARM GNU/Linux" to compile the
+          user applications. "ARM GNU/Linux" also can be used to compile the kernel itself.
+          The SodeSourcery doesn't say the same.
+        * Install GNU toolchain into "/opt/arm". The "gcc" must have the full path:
+          "/opt/arm/bin/arm-none-eabi-gcc" and "/opt/arm/bin/arm-linux-gnueabi-gcc".
+          It is a good idea to make symlinks to "/ust/local/bin".
+
+---------------------
+openocd (Linux only):
+---------------------
+
+    Download openocd source from svn://svn.berlios.de/openocd/trunk
+    Download libftd2xxx0 (for Linux) from FTDI's website: http://ftdichip.com/Drivers/D2XX.htm
+    Install libftd... (Read "readme" file in the .tar.gz file)
+    Compile and install openocd
+        * ./configure --enable-parport --enable-parport-ppdev --enable-ft2232_ftd2xx --enable-ftd2xx-highspeed
+        * make
+        * sudo make install
+
+----------------------------------------
+Configuring and compiling at91bootstrap:
+----------------------------------------
+
+    Download the source code from ftp://www.linux4sam.org/pub/at91bootstrap
+    Read the documentation, choose the right directory 
+    (according to the HW: AT91SAM9260-EK borrd, dataflash, etc.).
+    Compile the source code:
+        * make ARCH=arm CROSS_COMPILE=/opt/arm/bin/arm-none-eabi-
+
+----------------
+Compiling uBoot:
+----------------
+
+    Uncompress the uBoot modified by Olimex, and make symlinks to "/usr/local/bin":
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-gcc /usr/local/bin/arm-linux-gcc
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-g++ /usr/local/bin/arm-linux-g++
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-ar /usr/local/bin/arm-linux-ar
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-ld /usr/local/bin/arm-linux-ld
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-nm /usr/local/bin/arm-linux-nm
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-objcopy /usr/local/bin/arm-linux-objcopy
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-objdump /usr/local/bin/arm-linux-objdump
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-strip /usr/local/bin/arm-linux-strip
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-ld /usr/local/bin/arm-linux-ld
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-gdb /usr/local/bin/arm-linux-gdb
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-cpp /usr/local/bin/arm-linux-cpp
+        * sudo ln -s /opt/arm/bin/arm-none-eabi-as /usr/local/bin/arm-linux-as
+   
+    Change the header file "include/configs/sam9_l9260.h" according to your wishes.
+    To disable DHCP support, change "#define CONFIG_CMD_DHCP 1" to "#define CONFIG_CMD_DHCP 0".
+
+    Make symlinks (Linux kernel 2.6.31 (does it really matter?)):
+        * sudo ln -s /usr/include/linux/swab.h /usr/include/linux/byteorder/swab.h
+        * sudo ln -s /usr/include/linux/byteorder/swab.h /usr/include/linux/byteorder/swabb.h
+
+    You can modify the source code, and finally compile the code according to the board:
+        * make sam9_l9260_config all
+    Install "mkimage" tool, that is needed to compile Linux kernel image.
+        * sudo cp tools/mkimage /usr/local/bin
+
+-----------------------
+Compiling a new kernel:
+-----------------------
+
+    Uncompress the source provided by Olimex (linux-2.6.26.3-at91-olimex).
+    Call Mr. Proper:
+        * make mrproper
+    If you want to use the default configuration, do:
+        * cp arch/arm/configs/sam9_l9260_defconfig .config
+    Configure the kernel image (result will be: "arch/arm/boot/uImage").
+        * make ARCH=arm menuconfig # or config or xconfig or gconfig or what you want...
+    
+    It is not a bad idea to use "-O0" or "-O1" compiler option (instead of "-O2";
+    "-O2" does a lot of optimalization, which makes the debug process more
+    complicated --> ununderstandable jumps of cursor, "missing" codes, etc.).
+    
+    ----8<-----------------------------------------------------------------------------
+    USB gadgets should be modules, since they use command line parameters, foe example:
+        -- modprobe g_file_storage file=/path/to/file_system_image
+
+    Later it can be reconfigured by:
+        * sudo chmod 666 /sys/module/g_file_storage/parameters/file
+        * echo "/path/to/file_system_image" > /sys/module/g_file_storage/parameters/file
+    ----8<------------------------------------------------------------------------------
+        
+    To compile the configured kernel, type (uImage is the kernel customized for uBoot):
+        * make ARCH=arm CROSS_COMPILE=/opt/arm/bin/arm-none-eabi- uImage
+
+    And the kernel will be being compiled...
+
+        UIMAGE  arch/arm/boot/uImage
+        Image Name:   Linux-2.6.26.3-hg8lhs03
+        Created:      Tue Jul 21 12:09:51 2009
+        Image Type:   ARM Linux Kernel Image (uncompressed)
+        Data Size:    2654760 Bytes = 2592.54 kB = 2.53 MB
+        Load Address: 20008000
+        Entry Point:  20008000
+        Image arch/arm/boot/uImage is ready
+        
+    ----8<-----------------------------------------------------------------------------
+    Important! The kernel image must be smaller than 1800 kbyte. Normally, it is.
+    ----8<-----------------------------------------------------------------------------
+
+    The modules have to be moved into the root fs (/lib/modules/$KERNEL_VERSION/kernel/drivers/...).
+    The real path depends on the module itself.
+
+-------------------------------------------------------------
+Booting a new kernel (if you don't want to modify the FLASH):
+-------------------------------------------------------------
+
+    OpenOCD (when uBoot prompt comes up, press ESC to stop default boot process):
+        * halt
+        * load_image linux-2.6.26.3-at91-olimex/arch/arm/boot/uImage 0x23000000
+        * resume
+    At uBoot prompt:
+        * bootm 0x23000000
+        
+--------
+Root FS:
+--------
+
+    Normally, if someone has normal internet access (I mean: no idiot proxy servers), 
+    he/she can use the following command to create the file system that contains 
+    every package to build a working Debian installation:
+        * sudo debootstrap --arch=arm --foreign lenny rootfs-debian-5.0/
+    
+    Since I have a local copy of Debian 5.0 for ARM repository, I use the command:
+        * sudo debootstrap --arch=arm --foreign lenny rootfs-debian-5.0/ file:///tmp/repo
+    where the "/tmp/repo" is the root directory of the Debian package repository.
+    (See also: --make-tarball=FILE)
+
+    ----8<-----------------------------------------------------------------------------
+    From debootstrap man page:
+        main # cd / ; mkdir /sid-root
+        main # debootstrap sid /sid-root http://ftp.us.debian.org/debian/
+        [ ... watch it download the whole system ]
+        main # echo "proc /sid-root/proc proc defaults 0 0" >> /etc/fstab
+        main # mount proc /sid-root/proc -t proc
+        main # echo "sysfs /sid-root/sys sysfs defaults 0 0" >> /etc/fstab
+        main # mount sysfs /sid-root/sys -t sysfs
+        main # cp /etc/hosts /sid-root/etc/hosts
+        main # chroot /sid-root /bin/bash
+        chroot # dselect
+        [ you may use aptitude, install mc and vim ... ]
+        main # echo "8:23:respawn:/usr/sbin/chroot /sid-root " \
+                "/sbin/getty 38400 tty8"  >> /etc/inittab
+        [ define a login tty that will use this system ]
+         main # init q
+        [ reload init ]
+    ----8<-----------------------------------------------------------------------------
+
+    The debootstrap doesn't do everything well, so you should also create:
+        - /etc/inittab
+        - /etc/fstab
+        - /etc/passwd
+        - /etc/shadow
+    If it is not necessary, don't use the original "init" program of Linux.
+    Us a shell (/bin/sh, /bin/bash, etc.) instead.
+
+    To |create| a new FS image, type:
+        * sudo apt-get install mtd-tools
+        * sudo mkfs.jffs2 -r rootfs-debian-5.0/ -o rootfs-debian-5.0.jffs2 -e 128 -l -n
+
+    To |mount| a jffs2 image, type:
+        * sudo modprobe loop
+        * sudo modprobe jffs2
+        * sudo modprobe mtdblock
+        * sudo modprobe block2mtd
+        * sudo losetup /dev/loop0 rootfs-debian-5.0.jffs2
+        * sudo chmod 777 /sys/module/block2mtd/parameters/block2mtd
+        * sudo echo "/dev/loop0,128KiB" > /sys/module/block2mtd/parameters/block2mtd
+        * sudo mount -t jffs2 /dev/mtdblock0 /mnt
+
+        The result can be checked using dmesg:
+            [ 1656.964023] JFFS2 version 2.2. (NAND) © 2001-2006 Red Hat, Inc.
+            [ 1735.776075] block2mtd: mtd0: [/dev/loop0] erase_size = 128KiB [131072]
+
+    To |umount| jffs image:
+        * sudo mount /mnt
+        * sudo modprobe -r block2mtd
+        * sudo modprobe -r mtdblock
+        * sudo losetup -d /dev/loop0
+
+    Source: https://wiki.maemo.org/Modifying_the_root_image
+
+-------------------------------------------------------------------
+Install new boot loader / kernel / filesystem or RESET old content:
+-------------------------------------------------------------------
+
+    On Windows run:
+        * sam-ba \\usb\\ARM0 AT91SAM9260-EK at91sam9260_hg8lhs.tcl
+    or use the batch file named "at91sam9260_hg8lhs.bat", which normally does the same.
+
+    On Linux (See also: http://www.linux4sam.org/twiki/bin/view/Linux4SAM/SoftwareTools):
+        * sudo rmmod usbserial
+        * sudo modprobe usbserial vendor=0x03eb product=0x6124
+          A new USB serial converter will appear, i.e. /dev/ttyUSB0
+        * /opt/samba/sam-ba /dev/ttyUSB0 AT91SAM9260-EK at91sam9260_hg8lhs.tcl
+
+---------------------
+Debugging the kernel:
+---------------------
+
+    * When uBoot starts, press ESC to stop boot process
+    * Start OpenOCD (you can use "start_openocd" script, too)
+    * Start "arm-elf-gdbtui vmlinux_hg8lhs", where "vmlinux_hg8lhs" is the kernel
+      to be debugged
+    * Type the following commands (at gdb prompt):
+        - target remote localhost:3333 
+            (or shorter: target remote :3333)
+        - b start_kernel
+        - mon bp 0xc0008abc 4 hw
+            where 0xc0008abc is the address of the function "start_kernel".
+            #1: you can find the address of functions in System.map,
+                which is usually provided by the compiler scripts
+                (also "b" command tells the address)
+            #2: you can also add more breakpoints, watchpoints, etc.
+            "hw" is a hardware watchpoint. *Important*.
+        - c
+      Then the uBoot continues it's job.
+    * Type "bootd" (or other boot command) at uBoot prompt. UBoot continues
+      the boot process: loads and starts Linux kernel
+    * GDB will stop running the kernel at "start_kernel" (or at any pre-defined
+      breakpoint.
+    * You can use GDB commands to continue debugging.
+
+Nitthitam.
+
+===================
+Advanced lessions||
+===================
+
+    $ PATH=$PATH:/opt/arm-gnueabi/bin:/opt/arm-eabi/bin
+
+-------------------
+Compiling compiler:
+-------------------
+
+binutils:
+    * binutils that compiles "embedded" ELF binaries (EABI -- Embeddeed ABI):
+      In binutils* source directory:
+
+        $ ./configure --target=arm-hg8lhs-eabi --prefix=/opt/arm_hg8lhs
+        $ make
+        $ sudo make install
+        $ make distclean
+
+    * binutils that compiles "Linux" ELF binaries (Linux ABI):
+        $ ./configure --target=arm-hg8lhs-linux-gnueabi --prefix=/opt/arm_hg8lhs
+        $ make
+        $ sudo make install
+        $ make distclean
+
+gcc (C, C++):
+    * EABI (newlib version):
+      In gcc* source directory:
+
+        $ mkdir objdir
+        $ cd objdir
+        $ ../configure --prefix=/opt/arm-eabi --target=arm-hg8lhs-eabi \
+            --enable-shared --disable-threads --enable-__cxa_atexit \
+            --enable-languages=c --with-long-double-128 \
+            --with-newlib=../../newlib-1.17.0 --disable-libssp
+        $ make all-gcc
+        $ sudo make install-gcc
+
+        $ cd ../../newlib*
+
+        $ ../configure --prefix=/opt/arm-eabi --target=arm-hg8lhs-eabi
+        $ make
+
+        If arm-hg8lhs-eabi-ranlib doesn't exist {
+            $ sudo ln -s /usr/bin/ranlib /usr/bin/arm-hg8lhs-eabi-ranlib
+        }
+
+        $ sudo make install
+
+    * Linux GNU EABI (uClibc version):
+
+        $ ../configure --prefix=/opt/arm-gnueabi --target=arm-hg8lhs-linux-gnueabi \
+            --enable-shared --enable-languages=c --disable-libssp --disable-threads \
+            --disable-libmudflap --disable-libgomp --enable-__cxa_atexit
+
+        $ make all-gcc
+        $ sudo make install-gcc
+
+      The stage1 compiler has been installed.
+      Compile UCLIBC described bellow (BL uClibc).
+
+      GCC can be recompiled with "--enable-languages=c,c++", but libstdc++ will not
+      work / be compiled. 
+
+        $ make
+        $ sudo make install
+
+      These commands install the whole C compiler, including "crt*.o"
+      (except "crt1.o", which is the part of "*libc").
+
+      If you have problems with "crt*.o", go to "./gcc" subdirectory, and type:
+        $ make crti.o
+        $ make crtn.o
+        $ sudo make install
+        $ cd ..
+
+      And retry the compilation process.
+
+      If you have problems with "libgcc" (because of "-lc" ), add 
+      "-L/opt/arm-gnueabi/lib" to CC_FOR_TARGET="..." in top level Makefile. 
+      This text is fully left-aligned (starts at the begin of the line).
+
+      And retry the compilation process.
+
+uClibc (libc + libm!, Linux GNU EABI):
+    * In Linux kernel source directory {
+        $ sudo make ARCH=arm defconfig
+        $ sudo make ARCH=arm CROSS_COMPILE=/opt/arm-gnueabi/bin/arm-hg8lhs-linux-gnueabi-
+      }
+      
+      This is important because of the "asm/*.h" files.
+
+    * uClibc also needs kernel header file FOR ARM. There is a debian source package
+      that contains them.
+
+    * Install GAWK (Important, because Ubuntu has mawk installed!)
+      Always use the latest (probably snapshot) release of uClibc.
+   
+    * In uClibc* source directory: 
+        $ make ARCH=arm CROSS=/opt/arm-gnueabi/bin/arm-hg8lhs-linux-gnueabi- menuconfig
+        $ make ARCH=arm CROSS=/opt/arm-gnueabi/bin/arm-hg8lhs-linux-gnueabi-
+        $ sudo make ARCH=arm CROSS=/opt/arm-gnueabi/bin/arm-hg8lhs-linux-gnueabi- install
+
+gdb:
+    * Linux ABI:
+        $ ./configure --target=arm-hg8lhs-linux-gnueabi --prefix=/opt/arm-gnueabi
+        $ make
+        $ sudo make install
+
+    * EABI:
+        The same as above except the "--target" parameter and the prefix.

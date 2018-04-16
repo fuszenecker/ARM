@@ -1,0 +1,43 @@
+.:
+total 490700
+-rw-r--r-- 1 hg8lhs hg8lhs 124390041 2008-06-17 19:13 arm-2008q1-126-arm-none-linux-gnueabi.bin
+-rw-r--r-- 1 hg8lhs hg8lhs  67481346 2008-04-15 01:34 arm-2008q1-126-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
+-rw-r--r-- 1 hg8lhs hg8lhs 144239704 2008-04-15 01:34 arm-2008q1-126-arm-none-linux-gnueabi.src.tar.bz2
+-rw-r--r-- 1 hg8lhs hg8lhs  13795751 2007-03-05 11:32 binutils-2.17.tar.bz2
+-rw-r--r-- 1 hg8lhs hg8lhs  19783546 2008-04-13 12:42 binutils-2.18.tar.gz
+-rw-r--r-- 1 hg8lhs hg8lhs    555556 2007-08-10 00:12 efsl-0.2.8.tar.gz
+drwxr-xr-x 2 hg8lhs hg8lhs      4096 2008-06-17 23:24 Ethernet
+-rw-r--r-- 1 hg8lhs hg8lhs  32980638 2007-02-04 17:32 gcc-4.0.3.tar.bz2
+-rwx------ 1 hg8lhs hg8lhs  44144408 2008-01-06 20:17 gcc-4.2.2.tar.bz2
+-rw-r--r-- 1 hg8lhs hg8lhs  19298180 2007-04-20 10:15 gdb-6.6.tar.gz
+-rw-r--r-- 1 hg8lhs hg8lhs  15581509 2008-04-13 12:45 gdb-6.8.tar.bz2
+-rw-r--r-- 1 hg8lhs hg8lhs  19637146 2008-04-13 15:36 insight-6.1.tar.bz2
+drwxr-xr-x 2 hg8lhs hg8lhs      4096 2007-10-25 17:55 libc
+-rw-r--r-- 1 hg8lhs hg8lhs         0 2008-06-17 23:31 ls-lR.txt
+drwxr-xr-x 2 hg8lhs hg8lhs      4096 2008-01-06 22:23 OpenOCD
+drwxr-xr-x 2 hg8lhs hg8lhs      4096 2007-09-18 22:26 uClinux
+
+./Ethernet:
+total 1772
+-rw-r--r-- 1 hg8lhs hg8lhs   12040 2008-06-17 23:16 enc28j60testcode.zip
+-rw-r--r-- 1 hg8lhs hg8lhs   62227 2008-06-17 23:23 eth_rem_dev-1.1.tar.gz
+-rw-r--r-- 1 hg8lhs hg8lhs   14816 2008-06-17 23:23 eth-remote-device.pdf
+-rw-r--r-- 1 hg8lhs hg8lhs 1708553 2008-06-17 23:16 uip_enc28j60.zip
+
+./libc:
+total 8176
+-r--r--r-- 1 hg8lhs hg8lhs 8356837 2007-03-07 00:00 newlib.tar.gz
+
+./OpenOCD:
+total 1016
+-rw-r--r-- 1 hg8lhs hg8lhs    247 2007-06-21 01:57 ATMEL_hg8lhs_config
+-rw-r--r-- 1 hg8lhs hg8lhs   1034 2007-06-21 01:55 LPC_hg8lhs_config
+-rw-r--r-- 1 hg8lhs hg8lhs  77916 2007-04-20 19:10 OpenOCD_doc.tar.bz2
+-rw-r--r-- 1 hg8lhs hg8lhs    691 2007-09-07 23:19 openocd_hg8lhs.patch
+-rw-r--r-- 1 hg8lhs hg8lhs   1468 2007-04-16 12:23 openocd_pp.cfg
+-rw-r--r-- 1 hg8lhs hg8lhs 930952 2008-04-13 15:45 openocd.tar.gz
+
+./uClinux:
+total 45256
+-rwx------ 1 hg8lhs hg8lhs 45109498 2007-09-18 16:54 linux-2.6.22.6.tar.bz2
+-rwx------ 1 hg8lhs hg8lhs  1173944 2007-09-18 16:31 linux-2.6.22-uc0-big.patch.gz

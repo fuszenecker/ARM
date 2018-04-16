@@ -1,0 +1,43 @@
+# telnet localhost 4444
+# Useful commands:
+# help
+# poll
+# flash info 0
+# halt
+# reset
+# resume
+# resume 0
+# step 0
+# step
+# reg
+# flash erase 0 0 7
+# flash write 0 program.bin 0
+# mdw 0 100
+
+telnet_port 4444
+
+# /usr/local/arm/bin/arm-gdbtui program
+# target remote :3333
+# n    (few times...)
+gdb_port 3333
+
+# Of course.
+interface parport
+parport_port 0x378
+
+# It is originally "wiggler", but I have different cable pinout
+# It is a legacy of AVR programming. It is difficult to change...
+parport_cable hg8lhs
+jtag_speed 0
+
+# What to do at "reset" command. I dont't have reset wire, because
+# my programmer cable is only 4+GND "bit" wide
+# TCK, TDO, TDI, TMS, GND. I would need a RESET line, too.
+reset_config trst_only
+
+# I dont't understand them. But the device works with these parameters, 
+# so I'm hppy with them.
+jtag_device 4 0x1 0xf 0xe
+target arm7tdmi little reset_halt 0 arm7tdmi
+flash bank at91sam7 0 0 0 0 0
+

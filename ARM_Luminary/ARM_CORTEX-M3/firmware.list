@@ -1,0 +1,214 @@
+
+firmware:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000010c  00000000  00000000  00008000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .debug_abbrev 00000145  00000000  00000000  0000810c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  2 .debug_info   000001a4  00000000  00000000  00008251  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_line   00000084  00000000  00000000  000083f5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_loc    0000003e  00000000  00000000  00008479  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_pubnames 00000057  00000000  00000000  000084b7  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_aranges 00000040  00000000  00000000  0000850e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    000000db  00000000  00000000  0000854e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .comment      00000056  00000000  00000000  00008629  2**0
+                  CONTENTS, READONLY
+  9 .ARM.attributes 00000031  00000000  00000000  0000867f  2**0
+                  CONTENTS, READONLY
+ 10 .debug_frame  0000004c  00000000  00000000  000086b0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <_pointers>:
+   0:	20000800 	.word	0x20000800
+
+00000004 <vectors>:
+   4:	00000009                                ....
+
+00000008 <sysinit>:
+ * The function will be started after RESET.
+ * ------------------------------------------------------------------------ */
+
+extern unsigned long _etext;
+
+void sysinit() {
+   8:	b508      	push	{r3, lr}
+    unsigned char *ptr;
+    unsigned long *src, *dst, index;
+
+    /* Initialize ".data" section with binary 0s */
+    for (ptr = (unsigned char *)RAM_BASE; ptr < (unsigned char *)(MAIN_STACK); ptr++)
+   a:	f640 0001 	movw	r0, #2049	; 0x801
+ * The function will be started after RESET.
+ * ------------------------------------------------------------------------ */
+
+extern unsigned long _etext;
+
+void sysinit() {
+   e:	f240 0301 	movw	r3, #1
+  12:	f2c2 0300 	movt	r3, #8192	; 0x2000
+    unsigned char *ptr;
+    unsigned long *src, *dst, index;
+
+    /* Initialize ".data" section with binary 0s */
+    for (ptr = (unsigned char *)RAM_BASE; ptr < (unsigned char *)(MAIN_STACK); ptr++)
+  16:	f2c2 0000 	movt	r0, #8192	; 0x2000
+        *ptr = 0;
+  1a:	2200      	movs	r2, #0
+  1c:	4619      	mov	r1, r3
+  1e:	f803 2c01 	strb.w	r2, [r3, #-1]
+  22:	f801 2b01 	strb.w	r2, [r1], #1
+  26:	f101 0c01 	add.w	ip, r1, #1
+  2a:	1cd9      	adds	r1, r3, #3
+  2c:	3304      	adds	r3, #4
+void sysinit() {
+    unsigned char *ptr;
+    unsigned long *src, *dst, index;
+
+    /* Initialize ".data" section with binary 0s */
+    for (ptr = (unsigned char *)RAM_BASE; ptr < (unsigned char *)(MAIN_STACK); ptr++)
+  2e:	4283      	cmp	r3, r0
+        *ptr = 0;
+  30:	f80c 2c01 	strb.w	r2, [ip, #-1]
+  34:	f801 2c01 	strb.w	r2, [r1, #-1]
+void sysinit() {
+    unsigned char *ptr;
+    unsigned long *src, *dst, index;
+
+    /* Initialize ".data" section with binary 0s */
+    for (ptr = (unsigned char *)RAM_BASE; ptr < (unsigned char *)(MAIN_STACK); ptr++)
+  38:	d1f0      	bne.n	1c <sysinit+0x14>
+  3a:	f240 110c 	movw	r1, #268	; 0x10c
+        *ptr = 0;
+
+    for (src = &_etext, dst = (unsigned long *)0x20000000, index = 0; index < RAM_SIZE / sizeof(long); index++)
+  3e:	f640 0000 	movw	r0, #2048	; 0x800
+  42:	f2c0 0100 	movt	r1, #0
+  46:	f2c2 0000 	movt	r0, #8192	; 0x2000
+void sysinit() {
+    unsigned char *ptr;
+    unsigned long *src, *dst, index;
+
+    /* Initialize ".data" section with binary 0s */
+    for (ptr = (unsigned char *)RAM_BASE; ptr < (unsigned char *)(MAIN_STACK); ptr++)
+  4a:	f04f 5300 	mov.w	r3, #536870912	; 0x20000000
+        *ptr = 0;
+
+    for (src = &_etext, dst = (unsigned long *)0x20000000, index = 0; index < RAM_SIZE / sizeof(long); index++)
+        dst[index] = src[index];
+  4e:	18ca      	adds	r2, r1, r3
+  50:	f102 4260 	add.w	r2, r2, #3758096384	; 0xe0000000
+  54:	f8d2 c000 	ldr.w	ip, [r2]
+  58:	461a      	mov	r2, r3
+  5a:	f842 cb04 	str.w	ip, [r2], #4
+  5e:	eb01 0e02 	add.w	lr, r1, r2
+  62:	f10e 4c60 	add.w	ip, lr, #3758096384	; 0xe0000000
+  66:	f8dc e000 	ldr.w	lr, [ip]
+  6a:	f102 0c04 	add.w	ip, r2, #4
+  6e:	448c      	add	ip, r1
+  70:	f8c3 e004 	str.w	lr, [r3, #4]
+  74:	f10c 4c60 	add.w	ip, ip, #3758096384	; 0xe0000000
+  78:	f8dc e000 	ldr.w	lr, [ip]
+  7c:	f103 0c0c 	add.w	ip, r3, #12
+  80:	448c      	add	ip, r1
+  82:	f8c2 e004 	str.w	lr, [r2, #4]
+  86:	f10c 4260 	add.w	r2, ip, #3758096384	; 0xe0000000
+  8a:	6812      	ldr	r2, [r2, #0]
+  8c:	60da      	str	r2, [r3, #12]
+  8e:	3310      	adds	r3, #16
+
+    /* Initialize ".data" section with binary 0s */
+    for (ptr = (unsigned char *)RAM_BASE; ptr < (unsigned char *)(MAIN_STACK); ptr++)
+        *ptr = 0;
+
+    for (src = &_etext, dst = (unsigned long *)0x20000000, index = 0; index < RAM_SIZE / sizeof(long); index++)
+  90:	4283      	cmp	r3, r0
+  92:	d1dc      	bne.n	4e <sysinit+0x46>
+        dst[index] = src[index];
+
+    /* Main loop increments a counter */
+
+    for (;;)
+        main();
+  94:	f000 f804 	bl	a0 <main>
+  98:	f000 f802 	bl	a0 <main>
+  9c:	e7fa      	b.n	94 <sysinit+0x8c>
+  9e:	bf00      	nop
+
+000000a0 <main>:
+        asm("smlal r4, r5, r2, r3");     \
+        asm __volatile__("str r4, %0" : "=m" (acc_h));\
+        asm __volatile__("str r5, %0" : "=m" (acc_l));\
+    }
+
+int main() {
+  a0:	b082      	sub	sp, #8
+  a2:	2200      	movs	r2, #0
+    } acc;
+    
+    signed int *x = (int *) 0, *y = (int *) 0x20000000, i;
+
+    for (i = 0; i < 1024; i++)
+        MAC(acc.parts.acc_h, acc.parts.acc_l, x[i], y[i]);
+  a4:	6812      	ldr	r2, [r2, #0]
+  a6:	f102 5300 	add.w	r3, r2, #536870912	; 0x20000000
+  aa:	681b      	ldr	r3, [r3, #0]
+  ac:	9c01      	ldr	r4, [sp, #4]
+  ae:	9d00      	ldr	r5, [sp, #0]
+  b0:	fbc2 4503 	smlal	r4, r5, r2, r3
+  b4:	9401      	str	r4, [sp, #4]
+  b6:	9500      	str	r5, [sp, #0]
+  b8:	1d13      	adds	r3, r2, #4
+  ba:	6852      	ldr	r2, [r2, #4]
+  bc:	f103 5000 	add.w	r0, r3, #536870912	; 0x20000000
+  c0:	6803      	ldr	r3, [r0, #0]
+  c2:	9c01      	ldr	r4, [sp, #4]
+  c4:	9d00      	ldr	r5, [sp, #0]
+  c6:	fbc2 4503 	smlal	r4, r5, r2, r3
+  ca:	9401      	str	r4, [sp, #4]
+  cc:	9500      	str	r5, [sp, #0]
+  ce:	1d1a      	adds	r2, r3, #4
+  d0:	685a      	ldr	r2, [r3, #4]
+  d2:	f102 5100 	add.w	r1, r2, #536870912	; 0x20000000
+  d6:	680b      	ldr	r3, [r1, #0]
+  d8:	9c01      	ldr	r4, [sp, #4]
+  da:	9d00      	ldr	r5, [sp, #0]
+  dc:	fbc2 4503 	smlal	r4, r5, r2, r3
+  e0:	9401      	str	r4, [sp, #4]
+  e2:	9500      	str	r5, [sp, #0]
+  e4:	f103 0008 	add.w	r0, r3, #8
+  e8:	689a      	ldr	r2, [r3, #8]
+  ea:	f100 5200 	add.w	r2, r0, #536870912	; 0x20000000
+  ee:	6813      	ldr	r3, [r2, #0]
+  f0:	9c01      	ldr	r4, [sp, #4]
+  f2:	9d00      	ldr	r5, [sp, #0]
+  f4:	fbc2 4503 	smlal	r4, r5, r2, r3
+  f8:	9401      	str	r4, [sp, #4]
+  fa:	9500      	str	r5, [sp, #0]
+  fc:	f103 020c 	add.w	r2, r3, #12
+        } parts;
+    } acc;
+    
+    signed int *x = (int *) 0, *y = (int *) 0x20000000, i;
+
+    for (i = 0; i < 1024; i++)
+ 100:	f5b2 5f80 	cmp.w	r2, #4096	; 0x1000
+ 104:	d1ce      	bne.n	a4 <main+0x4>
+        MAC(acc.parts.acc_h, acc.parts.acc_l, x[i], y[i]);
+        // acc.accumulator += x[i] * y[i];
+        
+
+    return (acc.parts.acc_h);
+}
+ 106:	9801      	ldr	r0, [sp, #4]
+ 108:	b002      	add	sp, #8
+ 10a:	4770      	bx	lr

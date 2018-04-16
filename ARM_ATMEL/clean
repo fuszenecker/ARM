@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for dir in ??_*; do
+    cd $dir
+    make clean
+    cd ..
+done

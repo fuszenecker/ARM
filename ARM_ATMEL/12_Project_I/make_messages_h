@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "#ifndef __MESSAGES_H__" > messages.h
+echo "#define __MESSAGES_H__" >> messages.h
+echo "" >> messages.h
+
+grep -e "^[a-zA-Z_0-9]*:" messages.S | awk 'BEGIN { FS=":"} {print "extern char " $1 "[];"}' >> messages.h
+
+echo "" >> messages.h
+echo "#endif" >> messages.h

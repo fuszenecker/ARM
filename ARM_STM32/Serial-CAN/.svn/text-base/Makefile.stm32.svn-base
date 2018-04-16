@@ -1,0 +1,77 @@
+# ----------------------------------------------------------------------------
+# This is the Makefile for ST's STM32 (ARM-Cortex based) Microcontollers
+#
+# Change CROSS parameter if you want to use a different C/C++ compiler or 
+# the path to the C/C++ compiler is different.
+# ----------------------------------------------------------------------------
+
+CROSS		= arm-none-linux-gnueabi-
+CC			= $(CROSS)gcc
+CXX			= $(CROSS)g++
+AS			= $(CC)
+OPT			= 3
+FWLIB		= ../stm32/src
+DRIVERS		= ../stm32
+CFLAGS		= -mthumb -mcpu=cortex-m3 -Wall -O$(OPT) -g -DSTM32
+CFLAGS		+= -I$(FWLIB)/../inc -I. -I$(DRIVERS)
+#CFLAGS		+= -DCAN_LOOPBACK
+CFLAGS		+= -DCAN_NO_AUTORETRANSMIT -DCAN_RETRIES=256
+CXXFLAGS	= $(CFLAGS)
+LD			= $(CROSS)ld
+LDFLAGS		= -T stm32.ld
+
+OBJDUMP		= $(CROSS)objdump
+ODFLAGS		= -h -j .stack_pointer -j .vectors -j .text -j .data -j .bss -dS 
+OBJCOPY		= $(CROSS)objcopy
+OCFLAGS		= -O binary -j .stack_pointer -j .vectors -j .text -j .data -j .bss
+NM			= $(CROSS)nm
+
+# ----------------------------------------------------------------------------
+# Name of the program (firmware)
+# ----------------------------------------------------------------------------
+
+PROG		= serial_can
+
+# ----------------------------------------------------------------------------
+# Core modules of the formware application
+# ----------------------------------------------------------------------------
+
+OBJS		= sysinit.o main.o queue.o irq.o num_conv.o
+
+# ----------------------------------------------------------------------------
+# Hardver drivers (Hardver abstration layer and Software library)
+# ----------------------------------------------------------------------------
+
+# ------------
+# HAL modules:
+# ------------
+
+OBJS		+= $(DRIVERS)/clock.o $(DRIVERS)/systick.o $(DRIVERS)/gpio.o
+OBJS		+= $(DRIVERS)/can.o $(DRIVERS)/usart.o
+
+# -------------------------
+# Software library modules:
+# -------------------------
+
+OBJS		+= $(FWLIB)/stm32f10x_rcc.o $(FWLIB)/stm32f10x_flash.o
+OBJS		+= $(FWLIB)/stm32f10x_systick.o $(FWLIB)/stm32f10x_gpio.o
+OBJS		+= $(FWLIB)/stm32f10x_can.o $(FWLIB)/stm32f10x_usart.o
+OBJS		+= $(FWLIB)/stm32f10x_nvic.o $(FWLIB)/cortexm3_macro.o
+
+# ----------------------------------------------------------------------------
+# Compile the firmware
+# ----------------------------------------------------------------------------
+
+all: clean $(OBJS)
+	$(LD) $(LDFLAGS) -o $(PROG) $(OBJS) $(EXT_LIBS)
+	$(OBJDUMP) $(ODFLAGS) $(PROG) > $(PROG).list 
+	$(OBJCOPY) $(OCFLAGS) $(PROG) $(PROG).bin
+	$(NM) $(PROG) | sort > $(PROG).nm
+
+# ----------------------------------------------------------------------------
+# Clean unnecessary files
+# ----------------------------------------------------------------------------
+
+clean:
+	rm -rf $(OBJS) $(PROG) $(PROG).list $(PROG).hex $(PROG).nm $(PROG).bin
+

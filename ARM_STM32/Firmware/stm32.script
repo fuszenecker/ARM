@@ -1,0 +1,3 @@
+reset halt
+flash write_image erase rtos_stm32 0x8000000
+reset halt

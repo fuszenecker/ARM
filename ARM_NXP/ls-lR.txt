@@ -1,0 +1,41 @@
+.:
+total 2116
+drwxr-xr-x 2 hg8lhs hg8lhs    4096 2007-05-16 13:33 include
+drwxr-xr-x 2 hg8lhs hg8lhs    4096 2007-05-16 22:23 Keil Examples
+-rw-r--r-- 1 hg8lhs hg8lhs 2098470 2007-06-19 18:51 lpc2000_flash_utility.zip
+-rw-r--r-- 1 hg8lhs hg8lhs   20717 2007-08-05 21:56 lpc21isp.c.gz
+-rw-r--r-- 1 hg8lhs hg8lhs   26546 2007-08-05 19:21 lpc21isp_unix.zip
+-rw-r--r-- 1 hg8lhs hg8lhs       0 2008-06-17 23:31 ls-lR.txt
+
+./include:
+total 304
+-rw-r--r-- 1 hg8lhs hg8lhs 17588 2007-05-16 13:33 lpc2103.h
+-rw-r--r-- 1 hg8lhs hg8lhs 12764 2007-05-16 13:34 lpc210x.h
+-rw-r--r-- 1 hg8lhs hg8lhs 16613 2007-05-16 13:36 lpc213x.h
+-rw-r--r-- 1 hg8lhs hg8lhs 21627 2007-05-16 13:36 lpc214x.h
+-rw-r--r-- 1 hg8lhs hg8lhs 21925 2007-05-16 13:35 lpc21xx.h
+-rw-r--r-- 1 hg8lhs hg8lhs 23232 2007-05-16 13:37 lpc22xx.h
+-rw-r--r-- 1 hg8lhs hg8lhs 72242 2007-05-16 13:37 lpc23xx.h
+-rw-r--r-- 1 hg8lhs hg8lhs 59887 2007-05-16 13:38 lpc288x.h
+-rw-r--r-- 1 hg8lhs hg8lhs 35806 2007-05-16 13:38 lpc318x.h
+
+./Keil Examples:
+total 1748
+-rw-r--r-- 1 hg8lhs hg8lhs   7961 2007-05-16 13:31 lpc2000_iap.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  35858 2007-05-16 13:30 lpc2100_blinkyirq.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  15614 2007-05-16 13:30 lpc2100_blinky.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  27367 2007-05-16 13:31 lpc2100_uartirq.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  13705 2007-05-16 13:30 lpc2129_pwm.zip
+-rw-r--r-- 1 hg8lhs hg8lhs 121686 2007-05-16 13:29 lpc2148_usbaudio.zip
+-rw-r--r-- 1 hg8lhs hg8lhs 114988 2007-05-16 13:29 lpc2148_usbhid.zip
+-rw-r--r-- 1 hg8lhs hg8lhs 130413 2007-05-16 13:29 lpc2148_usbmem.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  35338 2007-05-16 13:30 lpc21xx_adc.zip
+-rw-r--r-- 1 hg8lhs hg8lhs 811089 2007-05-16 13:29 lpc21xx_insidersguide.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  14118 2007-05-16 13:28 lpc21xx_watchdog.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  36749 2007-05-16 13:30 lpc22xx_adc.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  13795 2007-05-16 13:30 lpc22xx_extmem.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  71758 2007-05-16 13:31 lpc2300_easyweb.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  57701 2007-05-16 13:29 lpc2368_usbaudio.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  54502 2007-05-16 13:29 lpc2368_usbhid.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  60654 2007-05-16 13:30 lpc2368_usbmem.zip
+-rw-r--r-- 1 hg8lhs hg8lhs  97810 2007-05-16 13:31 lpc2_can_examples.zip

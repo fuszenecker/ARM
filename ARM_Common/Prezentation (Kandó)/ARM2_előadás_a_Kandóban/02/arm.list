@@ -1,0 +1,148 @@
+
+arm:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000001b8  00000000  00000000  00008000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000004  20000000  20000000  00018000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .init         00000018  00008000  00008000  00010000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .fini         00000018  000001b8  000001b8  000081b8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  4 .init_array   00000004  000081d0  000081d0  000101d0  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 .fini_array   00000004  000081d4  000081d4  000101d4  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .jcr          00000004  000081d8  000081d8  000101d8  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .bss          00000004  20000004  20000004  00018004  2**0
+                  ALLOC
+  8 .comment      0000002a  00000000  00000000  00018004  2**0
+                  CONTENTS, READONLY
+  9 .debug_aranges 00000020  00000000  00000000  0001802e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_pubnames 00000025  00000000  00000000  0001804e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_info   00000088  00000000  00000000  00018073  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_abbrev 0000006b  00000000  00000000  000180fb  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_line   0000004c  00000000  00000000  00018166  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_frame  00000038  00000000  00000000  000181b4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 15 .debug_str    0000005b  00000000  00000000  000181ec  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 16 .debug_loc    0000005e  00000000  00000000  00018247  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 17 .debug_macinfo 000015b9  00000000  00000000  000182a5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 18 .ARM.attributes 00000030  00000000  00000000  0001985e  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	ea00003e 	b	100 <start>
+
+00000004 <undefined>:
+   4:	eafffffe 	b	4 <undefined>
+
+00000008 <swi>:
+   8:	ea000045 	b	124 <swi_handler>
+
+0000000c <prefetch_abort>:
+   c:	eafffffe 	b	c <prefetch_abort>
+
+00000010 <data_abort>:
+  10:	eafffffe 	b	10 <data_abort>
+
+00000014 <__unused__>:
+  14:	e1a00000 	nop			; (mov r0, r0)
+
+00000018 <irq>:
+  18:	ea00003f 	b	11c <irq_handler>
+
+0000001c <fiq>:
+  1c:	ea00003f 	b	120 <fiq_handler>
+	...
+
+00000100 <start>:
+ 100:	e1a00000 	nop			; (mov r0, r0)
+ 104:	e3a00a01 	mov	r0, #4096	; 0x1000
+ 108:	e3a0b000 	mov	fp, #0
+ 10c:	e3a0d202 	mov	sp, #536870912	; 0x20000000
+ 110:	e28dd801 	add	sp, sp, #65536	; 0x10000
+ 114:	e24dd004 	sub	sp, sp, #4
+ 118:	ea00001e 	b	198 <main>
+
+0000011c <irq_handler>:
+ 11c:	eafffffe 	b	11c <irq_handler>
+
+00000120 <fiq_handler>:
+ 120:	eafffffe 	b	120 <fiq_handler>
+
+00000124 <swi_handler>:
+ 124:	eafffffe 	b	124 <swi_handler>
+ 128:	e59f3010 	ldr	r3, [pc, #16]	; 140 <swi_handler+0x1c>
+ 12c:	e5d32000 	ldrb	r2, [r3]
+ 130:	e3520000 	cmp	r2, #0
+ 134:	03a02001 	moveq	r2, #1
+ 138:	05c32000 	strbeq	r2, [r3]
+ 13c:	e12fff1e 	bx	lr
+ 140:	000100d0 	ldrdeq	r0, [r1], -r0	; <UNPREDICTABLE>
+ 144:	e59f0024 	ldr	r0, [pc, #36]	; 170 <swi_handler+0x4c>
+ 148:	e92d4008 	push	{r3, lr}
+ 14c:	e5903000 	ldr	r3, [r0]
+ 150:	e3530000 	cmp	r3, #0
+ 154:	0a000003 	beq	168 <swi_handler+0x44>
+ 158:	e59f3014 	ldr	r3, [pc, #20]	; 174 <swi_handler+0x50>
+ 15c:	e3530000 	cmp	r3, #0
+ 160:	11a0e00f 	movne	lr, pc
+ 164:	112fff13 	bxne	r3
+ 168:	e8bd4008 	pop	{r3, lr}
+ 16c:	e12fff1e 	bx	lr
+ 170:	000100c8 	andeq	r0, r1, r8, asr #1
+ 174:	00000000 	andeq	r0, r0, r0
+
+00000178 <delay>:
+ 178:	e3500000 	cmp	r0, #0
+ 17c:	d12fff1e 	bxle	lr
+ 180:	e3a03000 	mov	r3, #0
+ 184:	e1a00000 	nop			; (mov r0, r0)
+ 188:	e2833001 	add	r3, r3, #1
+ 18c:	e1530000 	cmp	r3, r0
+ 190:	1afffffb 	bne	184 <delay+0xc>
+ 194:	e12fff1e 	bx	lr
+
+00000198 <main>:
+ 198:	e92d4010 	push	{r4, lr}
+ 19c:	e3a04000 	mov	r4, #0
+ 1a0:	e1a00004 	mov	r0, r4
+ 1a4:	ebfffff3 	bl	178 <delay>
+ 1a8:	e2844001 	add	r4, r4, #1
+ 1ac:	e354000a 	cmp	r4, #10
+ 1b0:	1afffffa 	bne	1a0 <main+0x8>
+ 1b4:	e8bd8010 	pop	{r4, pc}
+
+Disassembly of section .init:
+
+00008000 <_init>:
+    8000:	e1a0c00d 	.word	0xe1a0c00d
+    8004:	e92ddff8 	.word	0xe92ddff8
+    8008:	e24cb004 	.word	0xe24cb004
+    800c:	e24bd028 	.word	0xe24bd028
+    8010:	e89d6ff0 	.word	0xe89d6ff0
+    8014:	e12fff1e 	.word	0xe12fff1e
+
+Disassembly of section .fini:
+
+000001b8 <_fini>:
+ 1b8:	e1a0c00d 	.word	0xe1a0c00d
+ 1bc:	e92ddff8 	.word	0xe92ddff8
+ 1c0:	e24cb004 	.word	0xe24cb004
+ 1c4:	e24bd028 	.word	0xe24bd028
+ 1c8:	e89d6ff0 	.word	0xe89d6ff0
+ 1cc:	e12fff1e 	.word	0xe12fff1e

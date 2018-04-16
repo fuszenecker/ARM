@@ -1,0 +1,193 @@
+
+cortex-m3:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000dc  00000000  00000000  00008000  2**5
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000004  20000000  20000000  00018000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .init         0000000c  00008000  00008000  00010000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .fini         0000000c  000000dc  000000dc  000080dc  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  4 .init_array   00000004  000080e8  000080e8  000100e8  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 .fini_array   00000004  000080ec  000080ec  000100ec  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .jcr          00000004  000080f0  000080f0  000100f0  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .bss          00000004  20000004  20000004  00018004  2**0
+                  ALLOC
+  8 .comment      0000002a  00000000  00000000  00018004  2**0
+                  CONTENTS, READONLY
+  9 .debug_aranges 00000020  00000000  00000000  0001802e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_pubnames 00000025  00000000  00000000  0001804e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_info   00000088  00000000  00000000  00018073  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_abbrev 0000006b  00000000  00000000  000180fb  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_line   0000004c  00000000  00000000  00018166  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_frame  00000038  00000000  00000000  000181b4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 15 .debug_str    0000005b  00000000  00000000  000181ec  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 16 .debug_loc    0000005e  00000000  00000000  00018247  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 17 .debug_macinfo 00001659  00000000  00000000  000182a5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 18 .ARM.attributes 00000025  00000000  00000000  000198fe  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <stack_pointer>:
+   0:	2000fffc 	.word	0x2000fffc
+
+00000004 <reset>:
+   4:	00000061 	.word	0x00000061
+
+00000008 <nmi>:
+   8:	00000067 	.word	0x00000067
+
+0000000c <hard_fault>:
+   c:	00000000 	.word	0x00000000
+
+00000010 <mmu_fault>:
+  10:	00000069 	.word	0x00000069
+
+00000014 <bus_fault>:
+  14:	00000000 	.word	0x00000000
+
+00000018 <usage_fault>:
+  18:	00000000 	.word	0x00000000
+
+0000001c <__unused_0__>:
+  1c:	00000000 	.word	0x00000000
+
+00000020 <__unused_1__>:
+  20:	00000000 	.word	0x00000000
+
+00000024 <__unused_2__>:
+  24:	00000000 	.word	0x00000000
+
+00000028 <__unused_3__>:
+  28:	00000000 	.word	0x00000000
+
+0000002c <svc>:
+  2c:	0000006b 	.word	0x0000006b
+
+00000030 <debug_monitor>:
+  30:	00000000 	.word	0x00000000
+
+00000034 <__unused_4__>:
+  34:	00000000 	.word	0x00000000
+
+00000038 <pendsv>:
+  38:	00000000 	.word	0x00000000
+
+0000003c <systick>:
+  3c:	0000006d 	.word	0x0000006d
+
+00000040 <irq0>:
+  40:	0000006f 	.word	0x0000006f
+
+00000044 <irq1>:
+  44:	00000071 	.word	0x00000071
+  48:	46c0      	nop			; (mov r8, r8)
+  4a:	46c0      	nop			; (mov r8, r8)
+  4c:	46c0      	nop			; (mov r8, r8)
+  4e:	46c0      	nop			; (mov r8, r8)
+  50:	46c0      	nop			; (mov r8, r8)
+  52:	46c0      	nop			; (mov r8, r8)
+  54:	46c0      	nop			; (mov r8, r8)
+  56:	46c0      	nop			; (mov r8, r8)
+  58:	46c0      	nop			; (mov r8, r8)
+  5a:	46c0      	nop			; (mov r8, r8)
+  5c:	46c0      	nop			; (mov r8, r8)
+  5e:	46c0      	nop			; (mov r8, r8)
+
+00000060 <_start>:
+  60:	f000 f830 	bl	c4 <main>
+  64:	e7fc      	b.n	60 <_start>
+
+00000066 <nmi_handler>:
+  66:	e7fe      	b.n	66 <nmi_handler>
+
+00000068 <mmu_handler>:
+  68:	e7fe      	b.n	68 <mmu_handler>
+
+0000006a <svc_handler>:
+  6a:	e7fe      	b.n	6a <svc_handler>
+
+0000006c <systick_handler>:
+  6c:	e7fe      	b.n	6c <systick_handler>
+
+0000006e <irq0_handler>:
+  6e:	e7fe      	b.n	6e <irq0_handler>
+
+00000070 <irq1_handler>:
+  70:	e7fe      	b.n	70 <irq1_handler>
+  72:	46c0      	nop			; (mov r8, r8)
+  74:	46c0      	nop			; (mov r8, r8)
+  76:	46c0      	nop			; (mov r8, r8)
+  78:	46c0      	nop			; (mov r8, r8)
+  7a:	46c0      	nop			; (mov r8, r8)
+  7c:	46c0      	nop			; (mov r8, r8)
+  7e:	46c0      	nop			; (mov r8, r8)
+  80:	f240 0384 	movw	r3, #132	; 0x84
+  84:	f2c0 0301 	movt	r3, #1
+  88:	781a      	ldrb	r2, [r3, #0]
+  8a:	b90a      	cbnz	r2, 90 <irq1_handler+0x20>
+  8c:	2001      	movs	r0, #1
+  8e:	7018      	strb	r0, [r3, #0]
+  90:	4770      	bx	lr
+  92:	bf00      	nop
+  94:	f240 007c 	movw	r0, #124	; 0x7c
+  98:	f2c0 0001 	movt	r0, #1
+  9c:	b508      	push	{r3, lr}
+  9e:	6803      	ldr	r3, [r0, #0]
+  a0:	b12b      	cbz	r3, ae <irq1_handler+0x3e>
+  a2:	f240 0300 	movw	r3, #0
+  a6:	f2c0 0300 	movt	r3, #0
+  aa:	b103      	cbz	r3, ae <irq1_handler+0x3e>
+  ac:	4798      	blx	r3
+  ae:	bd08      	pop	{r3, pc}
+
+000000b0 <delay>:
+  b0:	2800      	cmp	r0, #0
+  b2:	dd06      	ble.n	c2 <delay+0x12>
+  b4:	f04f 0300 	mov.w	r3, #0
+  b8:	bf00      	nop
+  ba:	f103 0301 	add.w	r3, r3, #1
+  be:	4283      	cmp	r3, r0
+  c0:	d1fa      	bne.n	b8 <delay+0x8>
+  c2:	4770      	bx	lr
+
+000000c4 <main>:
+  c4:	b510      	push	{r4, lr}
+  c6:	f04f 0400 	mov.w	r4, #0
+  ca:	4620      	mov	r0, r4
+  cc:	f7ff fff0 	bl	b0 <delay>
+  d0:	f104 0401 	add.w	r4, r4, #1
+  d4:	2c0a      	cmp	r4, #10
+  d6:	d1f8      	bne.n	ca <main+0x6>
+  d8:	bd10      	pop	{r4, pc}
+  da:	bf00      	nop
+
+Disassembly of section .init:
+
+00008000 <_init>:
+    8000:	bf00b5f8 	.word	0xbf00b5f8
+    8004:	bc08bcf8 	.word	0xbc08bcf8
+    8008:	4770469e 	.word	0x4770469e
+
+Disassembly of section .fini:
+
+000000dc <_fini>:
+  dc:	bf00b5f8 	.word	0xbf00b5f8
+  e0:	bc08bcf8 	.word	0xbc08bcf8
+  e4:	4770469e 	.word	0x4770469e

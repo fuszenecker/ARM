@@ -1,0 +1,6 @@
+at91sam7s.o: at91sam7s.c jtag.h at91sam7s.h
+jtag.o: jtag.c jtag.h
+main.o: main.c jtag.h at91sam7s.h main.h
+at91sam7s.o: at91sam7s.h
+jtag.o: jtag.h
+main.o: main.h

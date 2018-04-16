@@ -1,0 +1,4 @@
+crt.o: crt.c
+irq.o: irq.c
+main.o: main.c
+swcall.o: swcall.c

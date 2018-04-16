@@ -1,0 +1,8 @@
+target sim
+load
+b main
+r
+n
+s
+si
+info reg

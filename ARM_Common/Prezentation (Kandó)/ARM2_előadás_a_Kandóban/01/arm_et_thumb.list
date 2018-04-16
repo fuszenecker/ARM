@@ -1,0 +1,55 @@
+
+arm_et_thumb.o:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000060  00000000  00000000  00000034  2**1
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .data         00000000  00000000  00000000  00000094  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000000  00000000  00000000  00000094  2**0
+                  ALLOC
+  3 .ARM.attributes 00000018  00000000  00000000  00000094  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	e3a00a01 	mov	r0, #4096	; 0x1000
+   4:	eb000003 	bl	18 <arm_func>
+   8:	e59f1004 	ldr	r1, [pc, #4]	; 14 <thumb_func_addr>
+   c:	e12fff31 	blx	r1
+
+00000010 <ide>:
+  10:	eafffffe 	b	10 <ide>
+
+00000014 <thumb_func_addr>:
+  14:	0000003f 	.word	0x0000003f
+
+00000018 <arm_func>:
+  18:	e3a07080 	mov	r7, #128	; 0x80
+  1c:	e2872004 	add	r2, r7, #4
+  20:	e0020091 	mul	r2, r1, r0
+  24:	e1a01007 	mov	r1, r7
+  28:	e08631a7 	add	r3, r6, r7, lsr #3
+  2c:	e4973004 	ldr	r3, [r7], #4
+  30:	e5b72005 	ldr	r2, [r7, #5]!
+  34:	e0e21493 	smlal	r1, r2, r3, r4
+  38:	e12fff1e 	bx	lr
+  3c:	0024      	.short	0x0024
+
+0000003e <thumb_func>:
+  3e:	2780      	movs	r7, #128	; 0x80
+  40:	1d3a      	adds	r2, r7, #4
+  42:	434a      	muls	r2, r1
+  44:	1c39      	adds	r1, r7, #0
+  46:	08ff      	lsrs	r7, r7, #3
+  48:	19f3      	adds	r3, r6, r7
+  4a:	683b      	ldr	r3, [r7, #0]
+  4c:	3704      	adds	r7, #4
+  4e:	3705      	adds	r7, #5
+  50:	683a      	ldr	r2, [r7, #0]
+  52:	fbc3 1204 	smlal	r1, r2, r3, r4
+  56:	4770      	bx	lr
+  58:	0000001a 	.word	0x0000001a
+  5c:	e1a00000 	nop			; (mov r0, r0)

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+cd LPC210x
+make clean
+cd ..
+
+for dir in ??_*; do
+    cd $dir
+    make clean
+    cd ..
+done

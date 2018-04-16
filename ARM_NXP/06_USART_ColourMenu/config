@@ -1,0 +1,46 @@
+# telnet localhost 4444
+# Useful commands:
+# ~~~~~~~~~~~~~~~~
+# help
+# poll
+# flash info 0
+# halt
+# reset
+# resume
+# resume 0
+# step 0
+# step
+# reg
+# flash erase 0 0 7
+# flash write 0 program.bin 0
+# mdw 0 100
+
+telnet_port 4444
+
+# /usr/local/arm/bin/arm-gdbtui program
+# target remote :3333
+# n    (few times...)
+gdb_port 3333
+daemon_startup reset
+
+# Of course, I use the parallel (printer) port with a special cable
+interface parport
+parport_port 0x378
+parport_cable hg8lhs
+jtag_speed 0
+
+# What to do at "reset" command
+reset_config trst_and_srst
+
+# I dont't understand them. But the device works with these parameters, 
+# so I'm happy with them.
+jtag_device 4 0x1 0xf 0xe
+
+#target <type> <startup mode>
+#target arm7tdmi <reset mode> <chainpos> <endianness> <variant>
+target arm7tdmi little run_and_halt 0 arm7tdmi-s_r4
+working_area 0 0x40000000 0x2000 nobackup
+
+#flash configuration
+#flash bank <driver> <base> <size> <chip_width> <bus_width> [driver_options ...]
+flash bank lpc2000 0x0 0x20000 0 0 lpc2000_v1 0 12000 calc_checksum

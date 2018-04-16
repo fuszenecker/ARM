@@ -1,0 +1,138 @@
+
+cortex-m3:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000098  00000000  00000000  00008000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+
+Disassembly of section .text:
+
+00000000 <_pointers>:
+   0:	2000fffc 	.word	0x2000fffc
+
+00000004 <vectors>:
+   4:	00000061 00000049 00000000 0000004d     a...I.......M...
+	...
+  2c:	00000051 00000000 00000000 00000000     Q...............
+  3c:	00000055 00000059 0000005d              U...Y...]...
+
+00000048 <nmi_handler>:
+	for (;;)
+		main();
+}
+
+void nmi_handler()
+{
+  48:	e7fe      	b.n	48 <nmi_handler>
+  4a:	bf00      	nop
+
+0000004c <mmu_handler>:
+	for(;;);
+}
+
+void mmu_handler()
+{
+  4c:	e7fe      	b.n	4c <mmu_handler>
+  4e:	bf00      	nop
+
+00000050 <svc_handler>:
+	for(;;);
+}
+
+void svc_handler()
+{
+  50:	e7fe      	b.n	50 <svc_handler>
+  52:	bf00      	nop
+
+00000054 <systick_handler>:
+	for(;;);
+}
+
+void systick_handler()
+{
+  54:	e7fe      	b.n	54 <systick_handler>
+  56:	bf00      	nop
+
+00000058 <irq0_handler>:
+	for(;;);
+}
+
+void irq0_handler()
+{
+  58:	e7fe      	b.n	58 <irq0_handler>
+  5a:	bf00      	nop
+
+0000005c <irq1_handler>:
+	for(;;);
+}
+
+void irq1_handler()
+{
+  5c:	e7fe      	b.n	5c <irq1_handler>
+  5e:	bf00      	nop
+
+00000060 <_start>:
+	irq1_handler,
+	// and so on...
+};
+
+void _start()
+{
+  60:	b508      	push	{r3, lr}
+	for (;;)
+		main();
+  62:	f000 f80b 	bl	7c <main>
+  66:	e7fc      	b.n	62 <_start+0x2>
+
+00000068 <delay>:
+void delay(int d)
+{
+	int z;
+
+	for (z = 0; z < d; z++)
+  68:	2800      	cmp	r0, #0
+  6a:	dd06      	ble.n	7a <delay+0x12>
+  6c:	f04f 0300 	mov.w	r3, #0
+		asm("nop");
+  70:	bf00      	nop
+void delay(int d)
+{
+	int z;
+
+	for (z = 0; z < d; z++)
+  72:	f103 0301 	add.w	r3, r3, #1
+  76:	4283      	cmp	r3, r0
+  78:	d1fa      	bne.n	70 <delay+0x8>
+  7a:	4770      	bx	lr
+
+0000007c <main>:
+		asm("nop");
+}
+
+int main()
+{
+  7c:	b510      	push	{r4, lr}
+	int c;
+
+	for (c = 0; c < 10; c++)
+  7e:	f04f 0400 	mov.w	r4, #0
+		delay(c);
+  82:	4620      	mov	r0, r4
+  84:	f7ff fff0 	bl	68 <delay>
+
+int main()
+{
+	int c;
+
+	for (c = 0; c < 10; c++)
+  88:	f104 0401 	add.w	r4, r4, #1
+  8c:	2c0a      	cmp	r4, #10
+  8e:	d1f8      	bne.n	82 <main+0x6>
+		delay(c);
+	
+	return 0;
+}
+  90:	f04f 0000 	mov.w	r0, #0
+  94:	bd10      	pop	{r4, pc}
+  96:	bf00      	nop
